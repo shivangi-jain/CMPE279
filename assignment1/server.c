@@ -5,23 +5,29 @@
 #include <stdlib.h> 
 #include <netinet/in.h> 
 #include <string.h> 
-#define PORT 8080 
+#include <sys/types.h>
+#include <pwd.h>
+#include <sys/wait.h>
+#define PORT 8080
 int main(int argc, char const *argv[]) 
 { 
+      
     int server_fd, new_socket, valread; 
     struct sockaddr_in address; 
     int opt = 1; 
     int addrlen = sizeof(address); 
     char buffer[1024] = {0}; 
     char *hello = "Hello from server"; 
-       
+     
+	
+    
     // Creating socket file descriptor 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
     { 
         perror("socket failed"); 
         exit(EXIT_FAILURE); 
     } 
-       
+
     // Forcefully attaching socket to the port 8080 
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
                                                   &opt, sizeof(opt))) 
@@ -51,9 +57,31 @@ int main(int argc, char const *argv[])
         perror("accept"); 
         exit(EXIT_FAILURE); 
     } 
-    valread = read( new_socket , buffer, 1024); 
-    printf("%s\n",buffer ); 
-    send(new_socket , hello , strlen(hello) , 0 ); 
-    printf("Hello message sent\n"); 
+
+    //dropping privilege part
+    int n = fork();
+    //Child 
+    if(n == 0)
+      {
+	struct passwd *privuser;
+	privuser = getpwnam("nobody");
+	if(privuser == NULL)
+	{
+	    exit(EXIT_FAILURE);
+	}
+	int userid = setuid(privuser->pw_uid);
+	//printf("%d", userid);
+     
+        valread = read( new_socket , buffer, 1024); 
+        printf("%s\n",buffer ); 
+        send(new_socket , hello , strlen(hello) , 0 ); 
+        printf("Hello message sent\n"); 
+      }
+    //Parent
+    else
+      {
+	//Wait for the child process to finish
+	wait(NULL);
+      }
     return 0; 
 } 
