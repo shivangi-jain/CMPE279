@@ -1,3 +1,7 @@
+
+Assignment 1 
+Shivangi Jain (014508026)
+
 The Assignment has 2 files namely client.c and server.c .
 The starter code is a client server program. 
 The server creates a socket, binds the port , listens and accepts the connection request from client.
