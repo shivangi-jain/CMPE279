@@ -28,7 +28,7 @@ int main(int argc, char const *argv[])
         exit(EXIT_FAILURE); 
     } 
 
-    // Forcefully attaching socket to the port 8080 
+    // Forcefully attaching socket to the port 80
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
                                                   &opt, sizeof(opt))) 
     { 
@@ -39,7 +39,7 @@ int main(int argc, char const *argv[])
     address.sin_addr.s_addr = INADDR_ANY; 
     address.sin_port = htons( PORT ); 
        
-    // Forcefully attaching socket to the port 8080 
+    // Forcefully attaching socket to the port 80
     if (bind(server_fd, (struct sockaddr *)&address,  
                                  sizeof(address))<0) 
     { 
