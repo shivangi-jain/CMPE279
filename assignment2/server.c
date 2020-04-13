@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
     int addrlen = sizeof(address); 
     char buffer[1024] = {0}; 
     char *hello = "Hello from server"; 
-     
+    char fd_arg[3]; 
 	
     
     // Creating socket file descriptor 
@@ -63,19 +63,14 @@ int main(int argc, char const *argv[])
     //Child 
     if(n == 0)
       {
-	struct passwd *privuser;
-	privuser = getpwnam("nobody");
-	if(privuser == NULL)
-	{
-	    exit(EXIT_FAILURE);
-	}
-	int userid = setuid(privuser->pw_uid);
-	//printf("%d", userid);
-     
-        valread = read( new_socket , buffer, 1024); 
-        printf("%s\n",buffer ); 
-        send(new_socket , hello , strlen(hello) , 0 ); 
-        printf("Hello message sent\n"); 
+        fd_arg[0] = new_socket;
+        fd_arg[1] = new_socket;
+        fd_arg[2] = 12;
+	printf("process id is %d", n);
+	printf("Value of argv is %s", argv[0]);
+	printf("Value of socket and argv %d %d", new_socket, fd_arg[0]);
+	execl(argv[0], fd_arg, NULL); 
+         
       }
     //Parent
     else
