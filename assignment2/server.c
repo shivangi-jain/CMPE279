@@ -19,12 +19,10 @@ int main(int argc, char const *argv[])
     char buffer[1024] = {0}; 
     char *hello = "Hello from server";
     char fd_arg[3]; 
-     
-    printf("argv[0] is %d and argc %d \n", argv[0][1], argv[0][2]);
 
     //Here argc[0][2] is initialised to 12. I am using this value to make  
     //sure that only child executes this code. Any value could have been   
-    //used in place of 12 but I have passed 12 in exec, I am comparing with 	//12.
+    //used in place of 12 but as I have passed 12 in exec, I am comparing with 	   //12.
     if(argv[0][2] == 12)
     {
         int fd = argv[0][1];
@@ -90,9 +88,6 @@ int main(int argc, char const *argv[])
         fd_arg[0] = new_socket;
         fd_arg[1] = new_socket;
         fd_arg[2] = 12;
-	printf("process id is %d", n);
-	printf("Value of argv is %s", argv[0]);
-	printf("Value of socket and argv %d %d", new_socket, fd_arg[0]);
 	execl(argv[0], fd_arg, NULL);
       }
 
